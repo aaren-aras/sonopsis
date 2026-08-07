@@ -12,10 +12,32 @@ endif()
 project ("sonopsis")
 
 # Add source to this project's executable.
-add_executable (sonopsis "sonopsis.cpp" "sonopsis.h")
+add_executable (sonopsis 
+	"include/sonopsis/frame.h"
+	"include/sonopsis/pipeline_config.h"
+	"host/ring_buffer.c" 
+	"host/receiver.c" 
+	"host/frame_assembler.c"
+)
+
+target_include_directories(sonopsis PRIVATE include)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET sonopsis PROPERTY CXX_STANDARD 20)
 endif()
 
 # TODO: Add tests and install targets if needed.
+enable_testing()
+
+add_test(
+	NAME test_udp_send
+	COMMAND python3 ${CMAKE_SOURCE_DIR}/tests/test_send.py
+)
+
+add_test(
+    NAME test_udp_roundtrip
+    COMMAND bash ${CMAKE_SOURCE_DIR}/tests/test_udp.sh
+)
+
+# Copy built binary to a system location when running `cmake --install`
+install(TARGETS sonopsis DESTINATION bin)
