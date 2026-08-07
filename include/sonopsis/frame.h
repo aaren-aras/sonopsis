@@ -16,7 +16,7 @@
 //};
 
 struct DataFrame {
-	uint64_t timestamp; // ns since epoch (January 1 1970, 00:00:00 UTC)
+	uint64_t timestamp; // nanoseconds since epoch (January 1 1970, 00:00:00 UTC)
 	int32_t channel_count;
 	int32_t samples_per_line;
 	// sample_data[channel * samples_per_line + sample_index]
