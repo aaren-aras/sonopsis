@@ -11,6 +11,9 @@ endif()
 
 project (sonopsis LANGUAGES C CXX CUDA)
 
+# Discover CUDA targets
+find_package(CUDAToolkit REQUIRED)
+
 # Add source files to project executable
 add_executable (sonopsis 
 	"include/sonopsis/frame.h"
@@ -34,6 +37,9 @@ set_property(TARGET sonopsis PROPERTY CUDA_STANDARD 17)
 set_property(TARGET sonopsis PROPERTY CUDA_SEPARABLE_COMPILATION ON)
 # Set CUDA architectures for RTX 5070 Ti (Blackwell / sm_100 or native)
 set_property(TARGET sonopsis PROPERTY CUDA_ARCHITECTURES "100")
+
+# Link the CUDA Runtime Library
+target_link_libraries(sonopsis PRIVATE CUDA::cudart)
 
 # TODO: Add tests and install targets if needed.
 enable_testing()
