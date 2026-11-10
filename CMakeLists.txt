@@ -9,31 +9,38 @@ if (POLICY CMP0141)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
-project ("sonopsis")
+project (sonopsis LANGUAGES C CXX CUDA)
 
-# Add source to this project's executable.
+# Add source files to project executable
 add_executable (sonopsis 
 	"include/sonopsis/frame.h"
 	"include/sonopsis/pipeline_config.h"
 	"host/ring_buffer.c" 
 	"host/receiver.c" 
 	"host/frame_assembler.c"
+	"host/pipeline_controller.cpp" 
+    "display/gl_display.cpp" 
+    "display/overlay.cpp"
+    "device/kernels/colormap.cu"
+    "device/kernels/hilbert.cu"
+    "device/kernels/log_compress.cu"
+    "device/kernels/scan_convert.cu"
 )
 
 target_include_directories(sonopsis PRIVATE include)
 
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET sonopsis PROPERTY CXX_STANDARD 20)
-endif()
+set_property(TARGET sonopsis PROPERTY CXX_STANDARD 20)
+set_property(TARGET sonopsis PROPERTY CUDA_STANDARD 17)
+set_property(TARGET sonopsis PROPERTY CUDA_SEPARABLE_COMPILATION ON)
+# Set CUDA architectures for RTX 5070 Ti (Blackwell / sm_100 or native)
+set_property(TARGET sonopsis PROPERTY CUDA_ARCHITECTURES "100")
 
 # TODO: Add tests and install targets if needed.
 enable_testing()
-
 add_test(
 	NAME test_udp_send
 	COMMAND python3 ${CMAKE_SOURCE_DIR}/tests/test_send.py
 )
-
 add_test(
     NAME test_udp_roundtrip
     COMMAND bash ${CMAKE_SOURCE_DIR}/tests/test_udp.sh
