@@ -1,4 +1,3 @@
-// pipeline_config.h
 #pragma once // include file once per compilation
 
 //struct ImageDims {
@@ -8,6 +7,10 @@
 /* Only one instance of each across entire program */
 
 // Macros work everywhere (C/C++/CUDA)
+
+#define PORT 5005
+#define PAYLOAD_SIZE 65536 // max UDP datagram size + 1 (2^16) 
+
 #define SAMPLE_RATE 40000000 // 40 MHz
 #define NUM_CHANNELS 8
 #define SPEED_OF_SOUND 1540.0f // m/s, in tissue
