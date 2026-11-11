@@ -4,39 +4,59 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
+#include "sonopsis/config.h"
 #include "sonopsis/frame.h"
-#include "sonopsis/pipeline_config.h"
 
-#define PORT 5005
+/*
+    Implements a UDP network listener (rx) for incoming raw data packets 
+    from external sources (i.e., FPGA streaming transducer data over Ethernet)
+    and parsing their header data.
 
+    UDP is chosen here for speed and minimal overhead without worrying about
+    a couple missing packets/frames.
+*/
 int main(void) {
-    int sock = socket(AF_INET, SOCK_DGRAM, 0);
+    
+    // Specify domain (IPv4), type (datagram), protocol (UDP)
+    int rx = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP); 
+    if (rx < 0) {
+        perror("*ERROR: Socket creation failed");
+        exit(EXIT_FAILURE);
+    }
 
-    struct sockaddr_in addr;
-    memset(&addr, 0, sizeof(addr));
-    addr.sin_family = AF_INET;
-    addr.sin_addr.s_addr = INADDR_ANY;
-    addr.sin_port = htons(PORT);
+    // Define network identity (local bind address)
+    struct sockaddr_in address;
+    memset(&addr, 0, sizeof(address));
+    address.sin_family = AF_INET; // IPv4
+    address.sin_addr.s_addr = INADDR_ANY; // 0.0.0.0 
+    address.sin_port = htons(PORT); // set Big-Endian byte order 
+    
+    // Hook network identity to socket (pass as generic pointer type)
+    if (bind(rx, (struct sockaddr*)&address, sizeof(address)) < 0) { 
+        perror("*ERROR: Socket bind failed");
+        close(rx);
+        exit(EXIT_FAILURE);
+    }
+    printf("*SUCCESS: Socket created and bound! Waiting for UDP frame on port %d...\n", PORT);
 
-    bind(sock, (struct sockaddr*)&addr, sizeof(addr));
+    // Receive datagrams
+    unsigned char buffer[PAYLOAD_SIZE]; 
+    struct sockaddr_in sender_info;
+    socklen_t sender_info_len = sizeof(sender_info);
 
-    printf("Waiting for UDP frame on port %d...\n", PORT);
+    // Pause execution until UDP packet arrives 
+    ssize_t received = recvfrom(
+        rx, buffer, sizeof(buffer), 0,
+        (struct sockaddr*)&sender_info, &sender_info_len
+     );
+    printf("*SUCCESS: Received %zd bytes!\n", received);
 
-    // receive raw bytes
-    unsigned char buffer[65536];
-    struct sockaddr_in sender;
-    socklen_t sender_len = sizeof(sender);
-
-    ssize_t received = recvfrom(sock, buffer, sizeof(buffer), 0,
-        (struct sockaddr*)&sender, &sender_len);
-
-    printf("Received %zd bytes\n", received);
-
-    // interpret as DataFrame header
+    // Interpret as DataFrame header (frame.h)
     struct DataFrame* frame = (struct DataFrame*)buffer;
-    printf("Timestamp:        %llu ns\n", (unsigned long long)frame->timestamp);
-    printf("Channels:         %d\n", frame->channel_count);
+    printf("Timestamp: %llu ns\n", (unsigned long long)frame->timestamp); // guaranteed >64 bits
+    printf("Channels: %d\n", frame->channel_count);
     printf("Samples per line: %d\n", frame->samples_per_line);
 
+    close(rx);
     return 0;
 }
