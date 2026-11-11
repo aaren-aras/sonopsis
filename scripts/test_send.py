@@ -8,7 +8,7 @@ HOST = '127.0.0.1'
 PORT = 5005
 
 NUM_CHANNELS = 1
-SAMPLES_PER_LINE = 1000  # match your pipeline_config.h
+SAMPLES_PER_LINE = 1000  # match config.h
 
 # build fake frame
 timestamp_ns = int(time.time_ns())
