@@ -19,12 +19,14 @@ that matches your GPU's architecture)*. It goes without saying that access to an
 
 On Windows, you'll need to install the standard Linux version of the toolkit within a 
 [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) environment (Ubuntu **22.04 
-LTS** recommended) equipped with **Python 3.x**, **GCC 13+**, **Make**, **CMake 3.30+**, since native Windows 
-doesn't support POSIX socket headers (like those used in `host/receiver.c`). This also ensures 
-environmental parity with k-wave-python's C++ binaries.
+LTS** recommended) equipped with **Python 3.x**, **GCC 13+**, **Make**, **CMake 3.30+**, since 
+native Windows doesn't support POSIX socket headers (like those used in `host/receiver.c`). 
+This also ensures environmental parity with k-wave-python's C++ binaries.
 
 Ensure you have the latest NVIDIA [display driver](https://www.nvidia.com/en-us/drivers/) 
-installed as well (on your **host machine**, NOT inside WSL).
+installed as well (on your **host machine**, NOT inside WSL). I'm finding I need about
+**6** GB of disk space total, most of which is coming from the `nvidia-cuda-toolkit` package
+through Ubuntu/WSL.
 
 ## Setup
 If you've already installed the prequisites, jump ahead to [Running Locally](#running-locally).
