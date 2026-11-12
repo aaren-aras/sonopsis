@@ -1,15 +1,17 @@
-*.venv
+*.venv/
 __pycache__/
 *.pyc
 
 # Build outputs and caches
-/out/
+out/
 build/
 bin/
 obj/
 x64/
 x86/
 .vs/
+*.log*
+*.deb
 
 # Auto-generated Vivado files and caches
 *.xpr
@@ -20,9 +22,9 @@ x86/
 *.bit
 *.hdf
 *.safer
-.srcs/
-.sim/
-.ip_user_files/
+*.srcs/
+*.sim/
+*.ip_user_files/
 .hw_server/
 .Xil/
 
