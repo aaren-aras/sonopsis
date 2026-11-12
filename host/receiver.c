@@ -1,5 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -26,7 +28,7 @@ int main(void) {
 
     // Define network identity (local bind address)
     struct sockaddr_in address;
-    memset(&addr, 0, sizeof(address));
+    memset(&address, 0, sizeof(address));
     address.sin_family = AF_INET; // IPv4
     address.sin_addr.s_addr = INADDR_ANY; // 0.0.0.0 
     address.sin_port = htons(PORT); // set Big-Endian byte order 
@@ -49,7 +51,7 @@ int main(void) {
         rx, buffer, sizeof(buffer), 0,
         (struct sockaddr*)&sender_info, &sender_info_len
      );
-    printf("*SUCCESS: Received %zd bytes!\n", received);
+    printf("*SUCCESS: Received %zd bytes!!!\n", received);
 
     // Interpret as DataFrame header (frame.h)
     struct DataFrame* frame = (struct DataFrame*)buffer;
