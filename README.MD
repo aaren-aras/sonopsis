@@ -82,9 +82,9 @@ source ~/.bashrc
 Finally, verify your installations:
 
 ```bash
-cmake --version   # Must be >= 3.30
-nvcc --version    # Must locate the CUDA compiler
-nvidia-smi        # Verify GPU visibility
+cmake --version  
+nvcc --version  
+nvidia-smi     
 ```
 
 If you're running into issues with the official package, try `nvidia-cuda-toolkit` instead.
