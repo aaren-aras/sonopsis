@@ -37,11 +37,11 @@ target_link_libraries(sonopsis PRIVATE CUDA::cudart)
 enable_testing()
 add_test(
 	NAME test_udp_send
-	COMMAND python3 ${CMAKE_SOURCE_DIR}/scripts/test_send.py
+	COMMAND python3 ${CMAKE_SOURCE_DIR}/scripts/sender.py
 )
 add_test(
     NAME test_udp_roundtrip
-    COMMAND bash ${CMAKE_SOURCE_DIR}/scripts/test_udp.sh
+    COMMAND bash ${CMAKE_SOURCE_DIR}/scripts/roundtrip.sh
 )
 
 # Copy built binary to a system location when running `cmake --install`
