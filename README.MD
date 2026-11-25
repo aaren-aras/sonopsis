@@ -1,34 +1,30 @@
 # SONOPSIS 
 
 Going to try (**1**) synthetically generating raw ultrasound radio frequency data with 
-[k-wave-python](https://github.com/waltsims/k-wave-python/tree/master) (a Python implementation 
-of MATLAB's `k-Wave` toolbox), (**2**) processing (beamforming) and filtering it on a 
-**[PYNQ-Z2](https://www.amd.com/en/corporate/university-program/aup-boards/pynq-z2.html)** FPGA 
-SoC, then (**3**) streaming the outputs to a host GPU for 2D/3D image reconstruction with 
+`k-wave-python` (a Python implementation of MATLAB's `k-Wave` toolbox), (**2**) processing (*beamforming*) and
+filtering it on a **[PYNQ-Z2](https://www.amd.com/en/corporate/university-program/aup-boards/pynq-z2.html)** 
+FPGA SoC, then (**3**) streaming the outputs to a host GPU for 2D/3D image reconstruction with 
 **[CUDA](https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/writing-cuda-kernels.html)** kernels.
+Files in the `host/` and `device/` directories ingest and process data on the **CPU** and **GPU** respectively.
 
 The goal is to eventually transition to a physical transducer probe, pulser, analog front-end, and ADC, 
 but I'm broke. Was inspired to work on this after a really awesome elective from my last term!
 
-Files in the `host/` directory run and ingest data on the **CPU** with CPU memory. Files in the 
-`device/` directory run and process data on the **GPU** with GPU memory.
-
 ## Prerequisites
 NVIDIA's [CUDA Toolkit](https://developer.nvidia.com/cuda-downloads) is required for
-compiling the GPU beamforming and filtering kernels in `device/kernels` *(choose a version 
-that matches your GPU's architecture)*. It goes without saying that access to an **NVIDIA GPU**, 
-*either local or remote*, is also required.
+compiling the beamforming and filtering kernels in `device/kernels`, so choose a version 
+that matches your GPU's architecture. Needless to say, access to an **NVIDIA GPU**
+*(either local or remote)* is also required.
 
-On Windows, you'll need to install the standard Linux version of the toolkit within a 
+On Windows, you'll need to install the Linux version of the toolkit within a 
 **[WSL2](https://learn.microsoft.com/en-us/windows/wsl/install)** environment (Ubuntu **22.04 
-LTS** recommended) equipped with **Python 3.x**, **GCC 13+**, **Make**, **CMake 3.30+**, since 
-native Windows doesn't support POSIX socket headers (like those used in `host/receiver.c`). 
-This also ensures environmental parity with k-wave-python's C++ binaries.
+LTS** recommended) equipped with **Python 3.x**, **GCC 13+**, **Make**, and **CMake 3.30+**, since 
+native Windows doesn't support POSIX socket headers (like the ones in `host/receiver.c`). 
+This also ensures parity with `k-wave-python`'s C++ binaries.
 
-Ensure you have the latest NVIDIA [display driver](https://www.nvidia.com/en-us/drivers/) 
-installed as well (on your **host machine**, NOT inside WSL). I'm finding I need about
-**6** GB of disk space total, most of which is coming from the `nvidia-cuda-toolkit` package
-through Ubuntu/WSL.
+Ensure you have the latest NVIDIA [display drivers](https://www.nvidia.com/en-us/drivers/) 
+installed on your **host machine** as well (NOT inside WSL). I'm finding I need ~**6** GB of disk space 
+for the project, mostly coming from the `nvidia-cuda-toolkit` package in Ubuntu/WSL.
 
 ## Setup
 If you've already installed the prequisites, jump ahead to [Running Locally](#running-locally).
@@ -43,7 +39,7 @@ cd sonopsis
 Or, clone the repository outside WSL and navigate to your directory through `/mnt/c/`.
 
 ### Installing Prerequisites
-If you are running Ubuntu or WSL 2, the default package manager often provides an older CMake version. 
+If you're running Ubuntu or WSL 2, the default package manager often provides an older CMake version. 
 Install modern CMake via Kitware's official repository along with the build essentials and CUDA toolkit:
 
 ```bash
