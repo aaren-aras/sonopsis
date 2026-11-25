@@ -86,7 +86,8 @@ If you're running into issues with `cuda-toolkit`, try `nvidia-cuda-toolkit` ins
 
 ### Running Locally
 
-From the project root, inside a **WSL 2** terminal, install core dependencies in a virtual environment:
+From the project root, inside a **WSL 2** terminal, install core Python dependencies (`requirements.txt`)
+in a virtual environment:
 
 ```bash
 python3 -m venv .venv # Python 3.11/3.12 recommended
