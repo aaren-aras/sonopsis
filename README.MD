@@ -1,15 +1,17 @@
 # SONOPSIS 
 
-Going to try synthetically generating raw ultrasound radio frequency (RF) data with 
-[k-wave-python](https://github.com/waltsims/k-wave-python/tree/master) (Python implementation 
-of MATLAB's k-Wave toolbox), processing (beamforming) and filtering it on a **PYNQ-Z2** FPGA 
-SoC, then streaming the outputs to a PC for 2D/3D image reconstruction with **CUDA** kernels.
+Going to try (**1**) synthetically generating raw ultrasound radio frequency data with 
+[k-wave-python](https://github.com/waltsims/k-wave-python/tree/master) (a Python implementation 
+of MATLAB's `k-Wave` toolbox), (**2**) processing (beamforming) and filtering it on a 
+**[PYNQ-Z2](https://www.amd.com/en/corporate/university-program/aup-boards/pynq-z2.html)** FPGA 
+SoC, then (**3**) streaming the outputs to a host GPU for 2D/3D image reconstruction with 
+**[CUDA](https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/writing-cuda-kernels.html)** kernels.
 
-The goal is to eventually replicate the whole ultrasound process with a physical transducer 
-probe, pulser, analog front-end, and ADC, but I'm broke.
+The goal is to eventually transition to a physical transducer probe, pulser, analog front-end, and ADC, 
+but I'm broke. Was inspired to work on this after a really awesome elective from my last term!
 
-Files in the `host/` directory run and ingest data on the CPU with CPU memory. Files in the 
-`device/` directory run and process data on the GPU with GPU memory.
+Files in the `host/` directory run and ingest data on the **CPU** with CPU memory. Files in the 
+`device/` directory run and process data on the **GPU** with GPU memory.
 
 ## Prerequisites
 NVIDIA's [CUDA Toolkit](https://developer.nvidia.com/cuda-downloads) is required for
@@ -18,7 +20,7 @@ that matches your GPU's architecture)*. It goes without saying that access to an
 *either local or remote*, is also required.
 
 On Windows, you'll need to install the standard Linux version of the toolkit within a 
-[WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) environment (Ubuntu **22.04 
+**[WSL2](https://learn.microsoft.com/en-us/windows/wsl/install)** environment (Ubuntu **22.04 
 LTS** recommended) equipped with **Python 3.x**, **GCC 13+**, **Make**, **CMake 3.30+**, since 
 native Windows doesn't support POSIX socket headers (like those used in `host/receiver.c`). 
 This also ensures environmental parity with k-wave-python's C++ binaries.
@@ -31,7 +33,7 @@ through Ubuntu/WSL.
 ## Setup
 If you've already installed the prequisites, jump ahead to [Running Locally](#running-locally).
 
-Inside WSL2 (Ubuntu) terminal, clone the repository, and navigate to the project directory:
+Inside a **WSL2** (**Ubuntu**) terminal, clone the repository, and navigate to the project directory:
 
 ```bash
 git clone https://github.com/aaren-aras/oncer.git 
